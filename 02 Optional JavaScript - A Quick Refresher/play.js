@@ -1,3 +1,18 @@
 const name = 'Max';
+let age = 29;
+const hasHobbies = true;
 
-console.log(name);
+age = 30;
+
+function summarizeUser(userName, userAge, userHasHobby){
+    return (
+        "Name is" + 
+        userName +
+        ", Age is" +
+        userAge +
+        ", and the user has hobbies:" +
+        userHasHobby
+    );
+}
+
+console.log(summarizeUser(name,age,hasHobbies));

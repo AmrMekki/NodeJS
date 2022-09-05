@@ -1,3 +1,4 @@
+const { json } = require("body-parser");
 const e = require("express");
 const fs = require("fs");
 const path = require("path");
@@ -46,6 +47,18 @@ module.exports = class Product {
         });
       }
     });
+  }
+
+  static deleteById(id){
+    getProductsFromFile((products) => {
+      const updatedProducts = products.findIndex((p) => p.id !== id);
+      fs.writeFile(p, JSON.stringify(updatedProducts), err =>{
+        if(!err){
+          
+        }
+      })
+    });
+
   }
 
   static fetchAll(cb) {

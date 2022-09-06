@@ -25,7 +25,6 @@ exports.getProduct = (req, res, next) => {
   //     });
   //   })
   //   .catch(err => console.log(err));
-  console.log("AMR");
   Product.findById(prodId)
     .then(product => {
       res.render('shop/product-detail', {

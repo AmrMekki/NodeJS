@@ -14,6 +14,7 @@ const mongoConnect = (callback) => {
       callback(client);
     })
     .catch((err) => {
+      console.log("ERRORRR");
       console.log(err);
       throw err;
     });

@@ -1,4 +1,5 @@
 const mongodb = require("mongodb");
+const { get } = require("../routes/shop");
 const getDb = require("../util/database").getDb;
 
 const ObjectId = mongodb.ObjectId;
@@ -56,13 +57,13 @@ class User {
             ...p,
             quantity: this.cart.items.find((i) => {
               return i.productId.toString() === p._id.toString();
-            }).quantity
+            }).quantity,
           };
         });
       });
   }
-  deleteItemFromCart(productId){
-    const updatedCartItems = this.cart.items.filter(item => {
+  deleteItemFromCart(productId) {
+    const updatedCartItems = this.cart.items.filter((item) => {
       return item.productId.toString() !== productId.toString();
     });
     const db = getDb();
@@ -70,20 +71,37 @@ class User {
       .collection("user")
       .updateOne(
         { _id: new ObjectId(this._id) },
-        { $set: { cart: {items: updatedCartItems} } }
+        { $set: { cart: { items: updatedCartItems } } }
       );
   }
-  addOrder(){
+  addOrder() {
     const db = getDb();
-    db.collection('orders').insertOne(this.cart).then(result =>{
-      this.cart = {item: []};
-      return db
-      .collection("user")
-      .updateOne(
-        { _id: new ObjectId(this._id) },
-        { $set: { cart: {items: []} } }
-      );
-    });
+    return this.getCart()
+      .then((products) => {
+        const order = {
+          items: this.cart,
+          user: {
+            _id: new ObjectId(this._id),
+            name: this.name,
+            email: this.email,
+          },
+        };
+        return db.collection("orders").insertOne(order);
+      })
+      .then((result) => {
+        this.cart = { item: [] };
+        return db
+          .collection("user")
+          .updateOne(
+            { _id: new ObjectId(this._id) },
+            { $set: { cart: { items: [] } } }
+          );
+      });
+  }
+
+  getOrders() {
+    const db = getDb();
+    return db.collection;
   }
   static findById(userId) {
     const db = getDb();
